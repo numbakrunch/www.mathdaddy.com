@@ -79,11 +79,6 @@ mousetrack.onload = setInterval(function() {dragX = (dragX + 999990)%1000000; up
 
 function updateCanvas(e) {
 
-  //if (e) {}
-  //  var mouseX = e.pageX - this.offsetLeft;
-  //  var mouseY = e.pageY - this.offsetTop;
-  //}
-
   if (e) {
     if (e.changedTouches) {
       var touch = e.changedTouches[0];
