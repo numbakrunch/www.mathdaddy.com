@@ -1,0 +1,101 @@
+<html>
+<head>
+<style>
+  body {
+    background: #b6d6ff;
+    margin: 0;
+  }
+  #canvas {
+    width: 512px;
+    height: 512px;
+    border: solid 2px #336699;
+    float: left;
+  }
+  #fft {
+    width: 512px;
+    height: 512px;
+    border: solid 2px #336699;
+    float: left;
+  }
+  #button {
+    position: absolute;
+  }
+</style>
+</head>
+<body>
+<input id='button' type='submit' value='Click me!'>
+<canvas id='canvas' width='256' height='256'></canvas>
+<canvas id='fft' width='256' height='256'></canvas>
+
+<script type='text/javascript'>
+
+function setPixel(i, x, y, r, g, b) {
+  index = (x + y * i.width) * 4;
+  var color = Math.min(c.getImageData(x, y, 1, 1).data[0] - 51, 255);
+  i.data[index+0] = r;
+  i.data[index+1] = g;
+  i.data[index+2] = b;
+  i.data[index+3] = 255;
+}
+
+function setPixelFFT(j, x, y, r, g, b) {
+  index = (x + y * j.width) * 4;
+  var color = Math.max(f.getImageData(x, y, 1, 1).data[0] + 51, 0);
+  color = 192;
+  j.data[index+0] = r;
+  j.data[index+1] = g;
+  j.data[index+2] = b;
+  j.data[index+3] = 255;
+}
+
+element = document.getElementById("canvas");
+c = element.getContext("2d");
+fft = document.getElementById("fft");
+f = fft.getContext("2d");
+
+element.width = 256;
+element.height = 256;
+fft.width = 256;
+fft.height = 256;
+
+// read the width and height of the canvas
+width = element.width;
+height = element.height;
+
+// create a new pixel array
+imageData = c.createImageData(width, height);
+fftData = f.createImageData(width, height);
+
+for (y = 0; y < height; y++) {
+  for (x = 0; x < width; x++) {
+    setPixel(imageData, x, y, 128, 0, 128);
+    setPixelFFT(fftData, x, y, 0, 128, 0);
+  }
+}
+
+var mousetrack = document.getElementById("canvas");
+mousetrack.onmousemove = function(e) {
+
+  pos = 0;
+
+  var mouseX = e.pageX - this.offsetLeft;
+  var mouseY = e.pageY - this.offsetTop;
+
+  setPixel(imageData, Math.floor(mouseX/2), Math.floor(mouseY/2), 0, 0, 0);
+  setPixelFFT(fftData, 255- Math.floor(mouseX/2), Math.floor(mouseY/2), 255, 255, 255);
+  for (y = 0; y < height; y++) {
+    for (x = 0; x < width; x++) {
+      brightness = c.getImageData(x, y, 1, 1).data[0];
+      brightness = 255 - brightness;
+      setPixelFFT(fftData, x, y, 255 - brightness, brightness, brightness);
+    }
+  }
+
+// copy the image data back onto the canvas
+c.putImageData(imageData, 0, 0);
+f.putImageData(fftData, 0, 0);
+}
+
+</script>
+</body>
+</html>
