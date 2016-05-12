@@ -33,90 +33,71 @@
     float: left;
     border: none;
   }
+  
+    #modal-background {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        opacity: .50;
+        -webkit-opacity: .5;
+        -moz-opacity: .5;
+        filter: alpha(opacity=50);
+        z-index: 1000;
+    }
+    
+    #modal-content {
+        background-color: white;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        box-shadow: 0 0 20px 0 #222;
+        -webkit-box-shadow: 0 0 20px 0 #222;
+        -moz-box-shadow: 0 0 20px 0 #222;
+        display: none;
+        height: 240px;
+        left: 50%;
+        margin: -120px 0 0 -160px;
+        padding: 10px;
+        position: absolute;
+        top: 50%;
+        width: 320px;
+        z-index: 1000;
+    }
+
+    #modal-background.active, #modal-content.active {
+        display: block;
+    }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+jQuery(function(){
+	jQuery("#modal-launcher, #modal-background, #modal-close").click(function () {
+		jQuery("#modal-content,#modal-background").toggleClass("active");
+	});
+});
+</script>
 </head>
 <body>
-<canvas id='canvas' width='100%' height='100%'></canvas>
+
+
+<button id="modal-launcher">Launch Modal Window</button>
+
+<div id="modal-background"></div>
+<div id="modal-content">
+    <button id="modal-close">Close Modal Window</button>
+</div>
+
 <div id='socialmedia'>
 <a href='https://www.facebook.com/numbakrunch'><img src='http://png-3.findicons.com/files/icons/818/aquaticus_social/64/facebook.png'></a>
 <a href='https://twitter.com/numbakrunch'><img src='http://png-3.findicons.com/files/icons/818/aquaticus_social/64/twitter.png'></a>
 <a href='https://plus.google.com/+DanSm%C3%AFth0/posts'><img src='http://web16.12679-10.whserv.de/kurse/webbasys/layout/typo3/images/google_plus_logo.png'></a>
 </div>
-<script type='text/javascript'>
-
-function setPixel(imageData, x, y, r, g, b, a) {
-  index = (x + y * imageData.width) * 4;
-  imageData.data[index+0] = r;
-  imageData.data[index+1] = g;
-  imageData.data[index+2] = b;
-  imageData.data[index+3] = a;
-}
-
-element = document.getElementById('canvas');
-c = element.getContext('2d');
-
-element.width = window.innerWidth / 3;
-element.height = window.innerHeight / 3;
-width = element.width;
-height = element.height;
-
-imageData = c.createImageData(width, height);
-
-mouseX = 400;
-mouseY = 200;
-
-dragX = 0;
-dragY = 0;
-
-var mousetrack = document.body;
-mousetrack.onmousemove = updateCanvas;
-mousetrack.onload = updateCanvas;
-mousetrack.addEventListener('touchmove', updateCanvas);
-
-mousetrack.onload = setInterval(function() {dragX = (dragX + 999990)%1000000; updateCanvas();}, 40);
-//setInterval("updateCanvas()", 50);
-
-function updateCanvas(e) {
-
-  //if (e) {}
-  //  var mouseX = e.pageX - this.offsetLeft;
-  //  var mouseY = e.pageY - this.offsetTop;
-  //}
-
-  if (e) {
-    if (e.changedTouches) {
-      var touch = e.changedTouches[0];
-      mouseX = touch.clientX;
-      mouseY = touch.clientY;
-    } else {
-      mouseX = e.pageX - this.offsetLeft;
-      mouseY = e.pageY - this.offsetTop;
-    }
-  }
-
-  //if (!(mouseX) || !(mouseY)) {mouseX = 0; mouseY = 0;}
-  pos = 0;
-  console.log('dragX = ' + dragX);
-  for (y = 0; y < height; y++) {
-    for (x = 0; x < width; x++) {
-      offsetX = (x + 370) * 1;
-      offsetY = (y + 1000) * 1;
-      brightness = (offsetX * offsetX + offsetY * offsetY);
-      brightness = brightness + ((x + 3 * y) % 5) * 51 + mouseX * 1 + mouseY * 1;
-      brightness = brightness + dragX + dragY;
-      // red, green, blue, alpha
-      imageData.data[pos++] = Math.abs(( brightness % 510) - 255);
-      imageData.data[pos++] = Math.abs(( (brightness + mouseX) % 510) - 255);
-      imageData.data[pos++] = Math.abs(( (brightness + mouseY) % 510) - 255);
-      imageData.data[pos++] = 255;
-    }
-  }
-
-c.putImageData(imageData, 0, 0);
-};
-</script>
 <script>
-if (window.location.search.substring(1,7) != "google") {
+if (window.location.search.substring(1,7) == "google") {
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
